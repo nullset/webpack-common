@@ -68,6 +68,7 @@ exports.extractCSS = ({ include, exclude, use }) => {
   };
 };
 
+// Using autoprefix in loadCSS function above, as well as exporting for production usage.
 const autoprefix = () => ({
   loader: 'postcss-loader',
   options: {
@@ -76,5 +77,24 @@ const autoprefix = () => ({
     ]),
   },
 });
-
 exports.autoprefix = autoprefix;
+
+exports.lintCSS = ({ include, exclude }) => ({
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        include,
+        exclude,
+        enforce: 'pre',
+
+        loader: 'postcss-loader',
+        options: {
+          plugins: () => ([
+            require('stylelint')(),
+          ]),
+        },
+      },
+    ],
+  },
+});
